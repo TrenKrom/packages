@@ -1,0 +1,95 @@
+# This is an example PKGBUILD file. Use this as a start to creating your own,
+# and remove these comments. For more information, see 'man PKGBUILD'.
+# NOTE: Please fill out the license field for your package! If it is unknown,
+# then please put 'unknown'.
+
+# Maintainer: Your Name <youremail@domain.com>
+pkgname='llama.cpp'
+pkgver=9292
+pkgrel=1
+#epoch=
+pkgdesc='LLM inference in C/C++'
+arch=(
+	'x86_64'
+	'armv7h'
+	'aarch64'
+)
+url="https://github.com/ggml-org/${pkgname}"
+license=('MIT')
+#groups=()
+depends=(
+	'libggml.so'
+	#'libggml-base.so'
+	#'libggml-rpc.so'
+	#'libggml-cpu.so'
+	#'libggml-vulkan.so'
+	'openssl'
+	'hicolor-icon-theme'
+)
+makedepends=(
+	'git'
+	'cmake'
+	'ninja'
+	'npm'
+)
+#checkdepends=()
+optdepends=(
+	'python-numpy'
+	'python-safetensors'
+	'python-sentencepiece'
+	'python-pytorch'
+	'python-transformers'
+)
+provides=(
+	"${pkgname}"
+	)
+#conflicts=()
+#replaces=()
+#backup=()
+#options=()
+#install=
+#changelog=
+source=("${pkgname}::git+${url}.git#tag=b${pkgver}")
+#noextract=()
+#sha256sums=()
+sha512sums=('7a494369b71127b7ff802bdb99e8dc12ff023f7f6270ddd30598953bc391324723da1957ff03f1bd6ba3d1bd7633624a03b8e30aad9695d53a5e07fd34af3212')
+#validpgpkeys=()
+
+prepare() {
+	git -C "${pkgname}" clean -dfx
+	BUILD_NUMBER=$(git -C "${pkgname}" rev-list --count HEAD)
+	BUILD_COMMIT=$(git -C "${pkgname}" rev-parse --short HEAD)
+	ulimit -n 2048
+}
+
+build() {
+	cmake -B build \
+		-S "${pkgname}" \
+		-G Ninja \
+		-W no-dev \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_INSTALL_PREFIX='/usr' \
+		-D CMAKE_C_COMPILER='/usr/bin/gcc' \
+		-D CMAKE_CXX_COMPILER='/usr/bin/g++' \
+		-D BUILD_SHARED_LIBS=ON \
+		-D LLAMA_BUILD_NUMBER="${BUILD_NUMBER}" \
+		-D LLAMA_BUILD_COMMIT="${BUILD_COMMIT}" \
+		-D LLAMA_OPENSSL=ON \
+		-D LLAMA_USE_PREBUILT_WEBUI=OFF \
+		-D LLAMA_BUILD_EXAMPLES=OFF \
+		-D LLAMA_BUILD_TESTS=OFF \
+		-D LLAMA_USE_SYSTEM_GGML=ON
+	cmake --build build
+}
+
+#check() {
+#	cd "$pkgname-$pkgver"
+#	make -k check
+#}
+
+package() {
+	DESTDIR="$pkgdir/" cmake --install build
+	install -Dvm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -Dvm644 "${pkgname}/media/llama1-icon-transparent.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+	ln -srv "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname%.cpp}.svg"
+}

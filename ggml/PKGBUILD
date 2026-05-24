@@ -1,0 +1,102 @@
+# This is an example PKGBUILD file. Use this as a start to creating your own,
+# and remove these comments. For more information, see 'man PKGBUILD'.
+# NOTE: Please fill out the license field for your package! If it is unknown,
+# then please put 'unknown'.
+
+# Maintainer: Your Name <youremail@domain.com>
+pkgname='ggml'
+pkgver=0.12.0
+pkgrel=1
+#epoch=
+pkgdesc='Tensor library for machine learning'
+arch=(
+	'x86_64'
+	'armv7h'
+	'aarch64'
+)
+url="https://github.com/ggml-org/${pkgname}"
+license=('MIT')
+#groups=()
+depends=(
+	'libgcc'
+	'libstdc++'
+	'vulkan-icd-loader'
+	'hipblas'
+	#'hip-runtime-amd'
+	#'rocblas'
+	#'openmp'
+)
+makedepends=(
+	'git'
+	'cmake'
+	'ninja'
+	'vulkan-headers'
+	'spirv-headers'
+	'shaderc'
+	'rocm-llvm'
+	#'rocwmma'
+)
+#checkdepends=()
+#optdepends=()
+provides=(
+	"lib${pkgname}.so"
+	"lib${pkgname}-base.so"
+	"lib${pkgname}-rpc.so"
+	"lib${pkgname}-cpu.so"
+	"lib${pkgname}-vulkan.so"
+	"lib${pkgname}-hip.so"
+)
+#conflicts=()
+#replaces=()
+#backup=()
+#options=()
+#install=
+#changelog=
+source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
+#noextract=()
+#sha256sums=()
+sha512sums=('27c533a99be04249cfe63180b9bfe102ef1987d01cdc4f8d81958249e05e233998191579d62ac8dd38e099e2ede4b403ad27c3c276fc94c9d0a5f2ed332ee876')
+#validpgpkeys=()
+
+prepare() {
+	git -C "${pkgname}" clean -dfx
+	ulimit -n 2048
+	#export ROCM_PATH='/opt/rocm'
+}
+
+build() {
+	cmake -B build \
+		-S "${pkgname}" \
+		-G Ninja \
+		-W no-dev \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_INSTALL_PREFIX='/usr' \
+		-D CMAKE_C_COMPILER='/opt/rocm/llvm/bin/clang' \
+		-D CMAKE_CXX_COMPILER='/opt/rocm/llvm/bin/clang++' \
+		-D BUILD_SHARED_LIBS=ON \
+		-D GGML_CCACHE=OFF \
+		-D GGML_ALL_WARNINGS=OFF \
+		-D GGML_ALL_WARNINGS_3RD_PARTY=OFF \
+		-D GGML_BUILD_EXAMPLES=OFF \
+		-D GGML_BUILD_TESTS=OFF \
+		-D GGML_LTO=ON \
+		-D GGML_RPC=ON \
+		-D GGML_VULKAN=ON \
+		-D GGML_HIP=ON \
+		-D GGML_HIP_GRAPHS=OFF \
+		-D GGML_HIP_ROCWMMA_FATTN=OFF \
+		-D AMDGPU_TARGETS='gfx1030;gfx1036' \
+		-D GGML_CUDA_FA_ALL_QUANTS=ON \
+		-D GGML_NATIVE=ON
+	cmake --build build
+}
+
+#check() {
+#	cd "$pkgname-$pkgver"
+#	make -k check
+#}
+
+package() {
+	DESTDIR="$pkgdir/" cmake --install build
+	install -Dvm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
