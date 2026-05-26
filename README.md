@@ -24,6 +24,8 @@ For more information, visit https://wiki.alpinelinux.org/wiki/APKBUILD_Reference
 Arch Linux (example):
 
 ```
+sudo pacman -Syu
+sudo pacman -S base-devel git
 git clone https://github.com/TrenKron/packages.git
 makepkg --dir packages/ggml --rmdeps --syncdeps  --install
 ```
