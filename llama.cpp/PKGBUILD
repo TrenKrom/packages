@@ -5,7 +5,7 @@
 
 # Maintainer: Your Name <youremail@domain.com>
 pkgname='llama.cpp'
-pkgver=9352
+pkgver=9354
 pkgrel=1
 #epoch=
 pkgdesc='LLM inference in C/C++'
@@ -52,7 +52,7 @@ provides=(
 source=("${pkgname}::git+${url}.git#tag=b${pkgver}")
 #noextract=()
 #sha256sums=()
-sha512sums=('f5e60643a6c77a257c6ee173365ff1c94a0328c57fcb3beb9f2c3a8bd8c30ae430bafdd1de9a7ee0f4c99174e5c28cd306b254c64d56a84d942a297b53a79355')
+sha512sums=('53e7ce8bc463b4e9c1fcd858f656704adb428ef70b29e177c0d2ca2e1f83cdd724ac444d5cc90ee825a2908dbf140ee1e647f1939b42e76a57b67371871f7a18')
 #validpgpkeys=()
 
 prepare() {
