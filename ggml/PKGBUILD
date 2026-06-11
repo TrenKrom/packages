@@ -5,7 +5,7 @@
 
 # Maintainer: Your Name <youremail@domain.com>
 pkgname='ggml'
-pkgver=0.14.0
+pkgver=0.15.0
 pkgrel=1
 #epoch=
 pkgdesc='Tensor library for machine learning'
@@ -55,7 +55,7 @@ provides=(
 source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
 #noextract=()
 #sha256sums=()
-sha512sums=('9fb661a802a530cd7d798e62a9eab3a6154b02f1a1f12d8a9bc8f9fd297fbd28563a086645de7fb6f86c395e479df878e31748c9df4164796fc7aa76ecab712f')
+sha512sums=('fbbda5e768ddfa9f8d2e165865c9daea3dc01fc7e7eefd1f319590a75e846449a656e6538f7c0abac984692d42163124ba216b7c705736c81826cac9ea2f03ff')
 #validpgpkeys=()
 
 prepare() {
