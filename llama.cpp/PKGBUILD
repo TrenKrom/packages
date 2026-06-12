@@ -1,13 +1,6 @@
-# This is an example PKGBUILD file. Use this as a start to creating your own,
-# and remove these comments. For more information, see 'man PKGBUILD'.
-# NOTE: Please fill out the license field for your package! If it is unknown,
-# then please put 'unknown'.
-
-# Maintainer: Your Name <youremail@domain.com>
 pkgname='llama.cpp'
-pkgver=9608
+pkgver=9610
 pkgrel=1
-#epoch=
 pkgdesc='LLM inference in C/C++'
 arch=(
 	'x86_64'
@@ -16,7 +9,6 @@ arch=(
 )
 url="https://github.com/ggml-org/${pkgname}"
 license=('MIT')
-#groups=()
 depends=(
 	'libggml.so'
 	#'libggml-base.so'
@@ -32,7 +24,6 @@ makedepends=(
 	'ninja'
 	'npm'
 )
-#checkdepends=()
 optdepends=(
 	'python-numpy'
 	'python-safetensors'
@@ -43,17 +34,8 @@ optdepends=(
 provides=(
 	"${pkgname}"
 	)
-#conflicts=()
-#replaces=()
-#backup=()
-#options=()
-#install=
-#changelog=
 source=("${pkgname}::git+${url}.git#tag=b${pkgver}")
-#noextract=()
-#sha256sums=()
-sha512sums=('fd98bdb5b09e29935f945e14dd70cac572821f1b1c5547a5873d8d6f9cd8188cf166ea5518617428bb03272e49bb73846708f7ce40c2bafe81a4a9bcef495a12')
-#validpgpkeys=()
+sha512sums=('5530e45cee9044a66ca1fc548b3b137d3601882ba46e9f63424997080058ebce8401e81d68c14d4dcee0696e9bcd513a30ef6a01f33e3f1beb0f1916f95e7a17')
 
 prepare() {
 	git -C "${pkgname}" clean -dfx
@@ -81,11 +63,6 @@ build() {
 		-D LLAMA_USE_SYSTEM_GGML=ON
 	cmake --build build
 }
-
-#check() {
-#	cd "$pkgname-$pkgver"
-#	make -k check
-#}
 
 package() {
 	DESTDIR="$pkgdir/" cmake --install build

@@ -1,13 +1,6 @@
-# This is an example PKGBUILD file. Use this as a start to creating your own,
-# and remove these comments. For more information, see 'man PKGBUILD'.
-# NOTE: Please fill out the license field for your package! If it is unknown,
-# then please put 'unknown'.
-
-# Maintainer: Your Name <youremail@domain.com>
 pkgname='ggml'
-pkgver=0.15.0
+pkgver=0.15.1
 pkgrel=1
-#epoch=
 pkgdesc='Tensor library for machine learning'
 arch=(
 	'x86_64'
@@ -16,15 +9,11 @@ arch=(
 )
 url="https://github.com/ggml-org/${pkgname}"
 license=('MIT')
-#groups=()
 depends=(
 	'libgcc'
 	'libstdc++'
 	'vulkan-icd-loader'
 	'hipblas'
-	#'hip-runtime-amd'
-	#'rocblas'
-	#'openmp'
 )
 makedepends=(
 	'git'
@@ -34,10 +23,7 @@ makedepends=(
 	'spirv-headers'
 	'shaderc'
 	'rocm-llvm'
-	#'rocwmma'
 )
-#checkdepends=()
-#optdepends=()
 provides=(
 	"lib${pkgname}.so"
 	"lib${pkgname}-base.so"
@@ -46,22 +32,12 @@ provides=(
 	"lib${pkgname}-vulkan.so"
 	"lib${pkgname}-hip.so"
 )
-#conflicts=()
-#replaces=()
-#backup=()
-#options=()
-#install=
-#changelog=
 source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
-#noextract=()
-#sha256sums=()
-sha512sums=('fbbda5e768ddfa9f8d2e165865c9daea3dc01fc7e7eefd1f319590a75e846449a656e6538f7c0abac984692d42163124ba216b7c705736c81826cac9ea2f03ff')
-#validpgpkeys=()
+sha512sums=('28fa6d7a40aedcb274cd30fe60ad3874aec5a361242388febc322924d605f5953aeab419c72751326fbc1cbe593c4b16a6732054f15c6a6663d696b761fbc8c7')
 
 prepare() {
 	git -C "${pkgname}" clean -dfx
 	ulimit -n 2048
-	#export ROCM_PATH='/opt/rocm'
 }
 
 build() {
@@ -83,18 +59,11 @@ build() {
 		-D GGML_RPC=ON \
 		-D GGML_VULKAN=ON \
 		-D GGML_HIP=ON \
-		-D GGML_HIP_GRAPHS=OFF \
-		-D GGML_HIP_ROCWMMA_FATTN=OFF \
 		-D AMDGPU_TARGETS='gfx1030;gfx1036' \
 		-D GGML_CUDA_FA_ALL_QUANTS=ON \
 		-D GGML_NATIVE=ON
 	cmake --build build
 }
-
-#check() {
-#	cd "$pkgname-$pkgver"
-#	make -k check
-#}
 
 package() {
 	DESTDIR="$pkgdir/" cmake --install build
