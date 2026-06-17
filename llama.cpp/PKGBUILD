@@ -1,5 +1,5 @@
 pkgname='llama.cpp'
-pkgver=9680
+pkgver=9682
 pkgrel=1
 pkgdesc='LLM inference in C/C++'
 arch=(
@@ -35,7 +35,7 @@ provides=(
 	"${pkgname}"
 	)
 source=("${pkgname}::git+${url}.git#tag=b${pkgver}")
-sha512sums=('a7bfd9c63961eab658b05cc2bfa56e83cdd63cd217ae9aef00dd88b49609dd0b26e33038aa4239137e213a3b610f18b75a2b9b14ad2bac678a72a3e8704e5411')
+sha512sums=('58b2b1f92367bce2a84dcf86cf8122e36c039cea039583813cf3f59b081987ee178ba1ce395dd15cdb5cae112225ec3c7a390407c1d3f9f48141c4f58cbbba88')
 
 prepare() {
 	git -C "${pkgname}" clean -dfx
@@ -48,19 +48,20 @@ build() {
 	cmake -B build \
 		-S "${pkgname}" \
 		-G Ninja \
-		-W no-dev \
-		-D CMAKE_BUILD_TYPE=Release \
-		-D CMAKE_INSTALL_PREFIX='/usr' \
-		-D CMAKE_C_COMPILER='/usr/bin/gcc' \
-		-D CMAKE_CXX_COMPILER='/usr/bin/g++' \
-		-D BUILD_SHARED_LIBS=ON \
-		-D LLAMA_BUILD_NUMBER="${BUILD_NUMBER}" \
-		-D LLAMA_BUILD_COMMIT="${BUILD_COMMIT}" \
-		-D LLAMA_OPENSSL=ON \
-		-D LLAMA_USE_PREBUILT_WEBUI=OFF \
-		-D LLAMA_BUILD_EXAMPLES=OFF \
-		-D LLAMA_BUILD_TESTS=OFF \
-		-D LLAMA_USE_SYSTEM_GGML=ON
+		-Wno-dev \
+		-Wdeprecated-enum-enum-conversion \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX='/usr' \
+		-DCMAKE_C_COMPILER='/usr/bin/gcc' \
+		-DCMAKE_CXX_COMPILER='/usr/bin/g++' \
+		-DBUILD_SHARED_LIBS=ON \
+		-DLLAMA_BUILD_NUMBER="${BUILD_NUMBER}" \
+		-DLLAMA_BUILD_COMMIT="${BUILD_COMMIT}" \
+		-DLLAMA_OPENSSL=ON \
+		-DLLAMA_USE_PREBUILT_WEBUI=OFF \
+		-DLLAMA_BUILD_EXAMPLES=OFF \
+		-DLLAMA_BUILD_TESTS=OFF \
+		-DLLAMA_USE_SYSTEM_GGML=ON
 	cmake --build build
 }
 
