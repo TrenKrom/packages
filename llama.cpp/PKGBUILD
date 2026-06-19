@@ -1,5 +1,5 @@
 pkgname='llama.cpp'
-pkgver=9725
+pkgver=9727
 pkgrel=1
 pkgdesc='LLM inference in C/C++'
 arch=(
@@ -34,8 +34,14 @@ optdepends=(
 provides=(
 	"${pkgname}"
 	)
-source=("${pkgname}::git+${url}.git#tag=b${pkgver}")
-sha512sums=('f078804c143cde3e581a61b4920090b68b5a3731fcb9af3780c77266b91f6d0d96ba87531b6e205abbb530016d00b68061b03bc9c8b0f7a4b90534cead033b26')
+source=(
+	"${pkgname}::git+${url}.git#tag=b${pkgver}"
+	"${pkgname}.svg::https://raw.githubusercontent.com/ggml-org/llama.brand/refs/heads/master/icon/icon-dark.svg"
+)
+sha512sums=(
+	'f078804c143cde3e581a61b4920090b68b5a3731fcb9af3780c77266b91f6d0d96ba87531b6e205abbb530016d00b68061b03bc9c8b0f7a4b90534cead033b26'
+	'5ca06448b314229d731cbc4a8ad1853991ea8d37d27a349dfc234b164155e50a4d719ef5e8c6f11366914a2c10c1c61348f8071c32fd7d0fffd11d77e2c898f7'
+)
 
 prepare() {
 	git -C "${pkgname}" clean -dfx
@@ -67,6 +73,7 @@ build() {
 package() {
 	DESTDIR="$pkgdir/" cmake --install build
 	install -Dvm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-	install -Dvm644 "${pkgname}/media/llama1-icon-transparent.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+	#install -Dvm644 "${pkgname}/media/llama1-icon-transparent.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+	install -Dvm644 "${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
 	ln -srv "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname%.cpp}.svg"
 }
