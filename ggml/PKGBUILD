@@ -1,5 +1,5 @@
 pkgname='ggml'
-pkgver=0.15.1
+pkgver=0.15.2
 pkgrel=1
 pkgdesc='Tensor library for machine learning'
 arch=(
@@ -33,7 +33,7 @@ provides=(
 	"lib${pkgname}-hip.so"
 )
 source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
-sha512sums=('28fa6d7a40aedcb274cd30fe60ad3874aec5a361242388febc322924d605f5953aeab419c72751326fbc1cbe593c4b16a6732054f15c6a6663d696b761fbc8c7')
+sha512sums=('42c65b9c5dd045c2f705c287ebcc32629b4ab74d42a6eac6db5a000dd9f5d97b09722d8a83097aa704edb40678558f04bcb1b6d088bd2959c81f130a813e67e1')
 
 prepare() {
 	git -C "${pkgname}" clean -dfx
