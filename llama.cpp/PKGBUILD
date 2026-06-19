@@ -1,5 +1,5 @@
 pkgname='llama.cpp'
-pkgver=9724
+pkgver=9725
 pkgrel=1
 pkgdesc='LLM inference in C/C++'
 arch=(
@@ -35,7 +35,7 @@ provides=(
 	"${pkgname}"
 	)
 source=("${pkgname}::git+${url}.git#tag=b${pkgver}")
-sha512sums=('6d98448aa7571f6bd6e04466727c1c0db667a685b293586355dde066baa410a5d65eec212603d19c8c151645477906f5f0a38b02a9d25d4e09073e842364ae69')
+sha512sums=('f078804c143cde3e581a61b4920090b68b5a3731fcb9af3780c77266b91f6d0d96ba87531b6e205abbb530016d00b68061b03bc9c8b0f7a4b90534cead033b26')
 
 prepare() {
 	git -C "${pkgname}" clean -dfx
