@@ -55,20 +55,19 @@ build() {
 	cmake -B "${srcdir}/${pkgname}/build" \
 		-S "${srcdir}/${pkgname}" \
 		-G 'Ninja' \
-		-Wno-dev \
-		-Wno-deprecated-enum-enum-conversion \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX='/usr' \
-		-DCMAKE_C_COMPILER='/usr/bin/gcc' \
-		-DCMAKE_CXX_COMPILER='/usr/bin/g++' \
-		-DBUILD_SHARED_LIBS=ON \
-		-DLLAMA_BUILD_NUMBER="${BUILD_NUMBER}" \
-		-DLLAMA_BUILD_COMMIT="${BUILD_COMMIT}" \
-		-DLLAMA_OPENSSL=ON \
-		-DLLAMA_USE_PREBUILT_WEBUI=OFF \
-		-DLLAMA_BUILD_EXAMPLES=OFF \
-		-DLLAMA_BUILD_TESTS=OFF \
-		-DLLAMA_USE_SYSTEM_GGML=ON
+		-W no-dev \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_INSTALL_PREFIX='/usr' \
+		-D CMAKE_C_COMPILER='/usr/bin/gcc' \
+		-D CMAKE_CXX_COMPILER='/usr/bin/g++' \
+		-D BUILD_SHARED_LIBS=ON \
+		-D LLAMA_BUILD_NUMBER="${BUILD_NUMBER}" \
+		-D LLAMA_BUILD_COMMIT="${BUILD_COMMIT}" \
+		-D LLAMA_OPENSSL=ON \
+		-D LLAMA_USE_PREBUILT_WEBUI=OFF \
+		-D LLAMA_BUILD_EXAMPLES=OFF \
+		-D LLAMA_BUILD_TESTS=OFF \
+		-D LLAMA_USE_SYSTEM_GGML=ON
 	cmake --build "${srcdir}/${pkgname}/build"
 }
 
