@@ -1,5 +1,5 @@
 pkgname='llama.cpp'
-pkgver=9744
+pkgver=9745
 pkgrel=1
 pkgdesc='LLM inference in C/C++'
 arch=(
@@ -39,7 +39,7 @@ source=(
 	"${pkgname}.svg::https://raw.githubusercontent.com/ggml-org/llama.brand/refs/heads/master/icon/icon-dark.svg"
 )
 sha512sums=(
-	'ff9d29d530a75bdae9d992b4cc98df103a3b913fda7aa1caaab8f3696b83052ab69d10a4bbdacf122a6ae9c3dd10714e2feab38a7e0338a215046e8e2fcd1d2e'
+	'6b7de50ef16bbf768a700d5963f78bd61fc7391380f6f34c77fb26761921b7a5a8e520b9896a8f0f7df0f47ee602fa49988b64f080fa90205fee72a3c9e7ba57'
 	'5ca06448b314229d731cbc4a8ad1853991ea8d37d27a349dfc234b164155e50a4d719ef5e8c6f11366914a2c10c1c61348f8071c32fd7d0fffd11d77e2c898f7'
 )
 
@@ -55,6 +55,7 @@ build() {
 		-S "${pkgname}" \
 		-G Ninja \
 		-W no-dev \
+		-W no-deprecated-enum-enum-conversion \
 		-D CMAKE_BUILD_TYPE=Release \
 		-D CMAKE_INSTALL_PREFIX='/usr' \
 		-D CMAKE_C_COMPILER='/usr/bin/gcc' \
