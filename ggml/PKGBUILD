@@ -67,6 +67,6 @@ build() {
 }
 
 package() {
-	DESTDIR="$pkgdir/" cmake --install "${srcdir}/${pkgname}/build" --prefix="${pkgdir}/usr"
+	cmake --install "${srcdir}/${pkgname}/build" --destdir="${pkgdir}" --prefix='/usr'
 	install -Dvm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
