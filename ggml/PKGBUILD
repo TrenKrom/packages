@@ -36,14 +36,13 @@ source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
 sha512sums=('42c65b9c5dd045c2f705c287ebcc32629b4ab74d42a6eac6db5a000dd9f5d97b09722d8a83097aa704edb40678558f04bcb1b6d088bd2959c81f130a813e67e1')
 
 prepare() {
-	mkdir -p "${srcdir}/${pkgname}/build"
-	git -C "${srcdir}/${pkgname}" clean -dfx
+	git -C "${pkgname}" clean -dfx
 	ulimit -n 2048
 }
 
 build() {
-	cmake -B "${srcdir}/${pkgname}/build" \
-		-S "${srcdir}/${pkgname}" \
+	cmake -B 'build' \
+		-S "${pkgname}" \
 		-G 'Ninja' \
 		-W no-dev \
 		-D CMAKE_BUILD_TYPE=Release \
@@ -63,10 +62,10 @@ build() {
 		-D AMDGPU_TARGETS='gfx1030;gfx1036' \
 		-D GGML_CUDA_FA_ALL_QUANTS=ON \
 		-D GGML_NATIVE=ON
-	cmake --build "${srcdir}/${pkgname}/build"
+	cmake --build 'build'
 }
 
 package() {
-	DESTDIR="${pkgdir}" cmake --install "${srcdir}/${pkgname}/build"
+	DESTDIR="${pkgdir}" cmake --install 'build'
 	install -Dvm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
