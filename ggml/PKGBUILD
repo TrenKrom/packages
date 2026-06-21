@@ -36,36 +36,37 @@ source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
 sha512sums=('42c65b9c5dd045c2f705c287ebcc32629b4ab74d42a6eac6db5a000dd9f5d97b09722d8a83097aa704edb40678558f04bcb1b6d088bd2959c81f130a813e67e1')
 
 prepare() {
-	git -C "${pkgname}" clean -dfx
+	mkdir -p "${srcdir}/${pkgname}/build"
+	git -C "${srcdir}/${pkgname}" clean -dfx
 	ulimit -n 2048
 }
 
 build() {
-	cmake -B build \
-		-S "${pkgname}" \
-		-G Ninja \
-		-W no-dev \
-		-D CMAKE_BUILD_TYPE=Release \
-		-D CMAKE_INSTALL_PREFIX='/usr' \
-		-D CMAKE_C_COMPILER='/opt/rocm/llvm/bin/clang' \
-		-D CMAKE_CXX_COMPILER='/opt/rocm/llvm/bin/clang++' \
-		-D BUILD_SHARED_LIBS=ON \
-		-D GGML_CCACHE=OFF \
-		-D GGML_ALL_WARNINGS=OFF \
-		-D GGML_ALL_WARNINGS_3RD_PARTY=OFF \
-		-D GGML_BUILD_EXAMPLES=OFF \
-		-D GGML_BUILD_TESTS=OFF \
-		-D GGML_LTO=ON \
-		-D GGML_RPC=ON \
-		-D GGML_VULKAN=ON \
-		-D GGML_HIP=ON \
-		-D AMDGPU_TARGETS='gfx1030;gfx1036' \
-		-D GGML_CUDA_FA_ALL_QUANTS=ON \
-		-D GGML_NATIVE=ON
-	cmake --build build
+	cmake -B "${srcdir}/${pkgname}/build" \
+		-S "${srcdir}/${pkgname}" \
+		-G 'Ninja' \
+		-Wno-dev \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX='/usr' \
+		-DCMAKE_C_COMPILER='/opt/rocm/llvm/bin/clang' \
+		-DCMAKE_CXX_COMPILER='/opt/rocm/llvm/bin/clang++' \
+		-DBUILD_SHARED_LIBS=ON \
+		-DGGML_CCACHE=OFF \
+		-DGGML_ALL_WARNINGS=OFF \
+		-DGGML_ALL_WARNINGS_3RD_PARTY=OFF \
+		-DGGML_BUILD_EXAMPLES=OFF \
+		-DGGML_BUILD_TESTS=OFF \
+		-DGGML_LTO=ON \
+		-DGGML_RPC=ON \
+		-DGGML_VULKAN=ON \
+		-DGGML_HIP=ON \
+		-DAMDGPU_TARGETS='gfx1030;gfx1036' \
+		-DGGML_CUDA_FA_ALL_QUANTS=ON \
+		-DGGML_NATIVE=ON
+	cmake --build "${srcdir}/${pkgname}/build"
 }
 
 package() {
-	DESTDIR="$pkgdir/" cmake --install build
-	install -Dvm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	DESTDIR="$pkgdir/" cmake --install "${srcdir}/${pkgname}/build" --prefix="${pkgdir}/usr"
+	install -Dvm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

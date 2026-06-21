@@ -1,5 +1,5 @@
 pkgname='llama.cpp'
-pkgver=9747
+pkgver=9750
 pkgrel=1
 pkgdesc='LLM inference in C/C++'
 arch=(
@@ -39,41 +39,43 @@ source=(
 	"${pkgname}.svg::https://raw.githubusercontent.com/ggml-org/llama.brand/refs/heads/master/icon/icon-dark.svg"
 )
 sha512sums=(
-	'286f0cd56217c1a8951c41e9f43decdaa262ed3eee7ac52c842ddcb78fad30ceab19bbff0f3ce27404705be43ede077ac1249a2cf12f11f3dd601350d1b1c8c0'
+	'9f4dd80fa70dc8a65847b81259b809e808c4a228b654989bd4a1eabebd0cdb1bcda920d4448b6d4fa7818ea97f99904867ec35583a82a317665a38be883f7a21'
 	'5ca06448b314229d731cbc4a8ad1853991ea8d37d27a349dfc234b164155e50a4d719ef5e8c6f11366914a2c10c1c61348f8071c32fd7d0fffd11d77e2c898f7'
 )
 
 prepare() {
-	git -C "${pkgname}" clean -dfx
-	BUILD_NUMBER=$(git -C "${pkgname}" rev-list --count HEAD)
-	BUILD_COMMIT=$(git -C "${pkgname}" rev-parse --short HEAD)
+	mkdir -p "${srcdir}/${pkgname}/build"
+	git -C "${srcdir}/${pkgname}" clean -dfx
+	BUILD_NUMBER=$(git -C "${srcdir}/${pkgname}" rev-list --count HEAD)
+	BUILD_COMMIT=$(git -C "${srcdir}/${pkgname}" rev-parse --short HEAD)
 	ulimit -n 2048
 }
 
 build() {
-	cmake -B build \
-		-S "${pkgname}" \
-		-G Ninja \
-		-W no-dev \
-		-D CMAKE_BUILD_TYPE=Release \
-		-D CMAKE_INSTALL_PREFIX='/usr' \
-		-D CMAKE_C_COMPILER='/usr/bin/gcc' \
-		-D CMAKE_CXX_COMPILER='/usr/bin/g++' \
-		-D BUILD_SHARED_LIBS=ON \
-		-D LLAMA_BUILD_NUMBER="${BUILD_NUMBER}" \
-		-D LLAMA_BUILD_COMMIT="${BUILD_COMMIT}" \
-		-D LLAMA_OPENSSL=ON \
-		-D LLAMA_USE_PREBUILT_WEBUI=OFF \
-		-D LLAMA_BUILD_EXAMPLES=OFF \
-		-D LLAMA_BUILD_TESTS=OFF \
-		-D LLAMA_USE_SYSTEM_GGML=ON
-	cmake --build build
+	cmake -B "${srcdir}/${pkgname}/build" \
+		-S "${srcdir}/${pkgname}" \
+		-G 'Ninja' \
+		-Wno-dev \
+		-Wno-deprecated-enum-enum-conversion \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX='/usr' \
+		-DCMAKE_C_COMPILER='/usr/bin/gcc' \
+		-DCMAKE_CXX_COMPILER='/usr/bin/g++' \
+		-DBUILD_SHARED_LIBS=ON \
+		-DLLAMA_BUILD_NUMBER="${BUILD_NUMBER}" \
+		-DLLAMA_BUILD_COMMIT="${BUILD_COMMIT}" \
+		-DLLAMA_OPENSSL=ON \
+		-DLLAMA_USE_PREBUILT_WEBUI=OFF \
+		-DLLAMA_BUILD_EXAMPLES=OFF \
+		-DLLAMA_BUILD_TESTS=OFF \
+		-DLLAMA_USE_SYSTEM_GGML=ON
+	cmake --build "${srcdir}/${pkgname}/build"
 }
 
 package() {
-	DESTDIR="$pkgdir/" cmake --install build
-	install -Dvm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-	#install -Dvm644 "${pkgname}/media/llama1-icon-transparent.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
-	install -Dvm644 "${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+	DESTDIR="$pkgdir/" cmake --install "${srcdir}/${pkgname}/build" --prefix="${pkgdir}/usr"
+	install -Dvm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	#install -Dvm644 "${srcdir}/${pkgname}/media/llama1-icon-transparent.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+	install -Dvm644 "${srcdir}/${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
 	ln -srv "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname%.cpp}.svg"
 }
