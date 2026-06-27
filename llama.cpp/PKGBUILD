@@ -1,5 +1,5 @@
 pkgname='llama.cpp'
-pkgver=9820
+pkgver=9821
 pkgrel=1
 pkgdesc='LLM inference in C/C++'
 arch=(
@@ -39,7 +39,7 @@ source=(
 	"${pkgname}.svg::https://raw.githubusercontent.com/ggml-org/llama.brand/refs/heads/master/icon/icon-dark.svg"
 )
 sha512sums=(
-	'cc3fefcf0ec85be194a90bced1e86b94c1fe04b1af378f68ba619896708fd02d5e7068968a126b2e3827ffae6787cb1b3ae86f564180194abeb49b614a6d64ed'
+	'4eb953996e94fdfe4d32f153843fb23bef52508c977f12f26d22e79b3d533e4a78518dabbce224b3ebe81386475c0dec1f1ff5afe0659d92a620871329fa2e38'
 	'5ca06448b314229d731cbc4a8ad1853991ea8d37d27a349dfc234b164155e50a4d719ef5e8c6f11366914a2c10c1c61348f8071c32fd7d0fffd11d77e2c898f7'
 )
 
